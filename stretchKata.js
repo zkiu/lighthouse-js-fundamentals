@@ -1,18 +1,250 @@
-var organizeInstructors = function (instructors) {
-    // Put your solution here
+// -- kata 13
+var makeCase = function (input, styles) {
+    var result = input;
+    // -- check if styles is a string
+    if (typeof styles === "string")
+        return cycleThroughStyles(input, styles);
+    // -- if styles is an array
+    // -- assume that the styles array passed in in already in the correct order of precedence
+    for (var _i = 0, styles_1 = styles; _i < styles_1.length; _i++) {
+        var style = styles_1[_i];
+        result = cycleThroughStyles(result, style);
+    }
+    return result;
 };
-console.log(organizeInstructors([
-    { name: "Samuel", course: "iOS" },
-    { name: "Victoria", course: "Web" },
-    { name: "Karim", course: "Web" },
-    { name: "Donald", course: "Web" },
-]));
-console.log(organizeInstructors([
-    { name: "Brendan", course: "Blockchain" },
-    { name: "David", course: "Web" },
-    { name: "Martha", course: "iOS" },
-    { name: "Carlos", course: "Web" },
-]));
+var cycleThroughStyles = function (input, style) {
+    var result;
+    switch (style) {
+        case "camel":
+            result = camelCase(input);
+            break;
+        case "pascal":
+            result = pascalCase(input);
+            break;
+        case "snake":
+            result = snakeCase(input);
+            break;
+        case "kebab":
+            result = kebabCase(input);
+            break;
+        case "title":
+            result = titleCase(input);
+            break;
+        case "vowel":
+            result = vowelCase(input);
+            break;
+        case "consonant":
+            result = consonantCase(input);
+            break;
+        case "upper":
+            result = upperCase(input);
+            break;
+        case "lower":
+            result = lowerCase(input);
+            break;
+        default:
+            break;
+    }
+    return result;
+};
+// -- from previous kata
+var camelCase = function (input) {
+    var result = "";
+    // -- loop through the string
+    for (var i = 0; i < input.length; i++) {
+        var letter = input[i];
+        // -- condition where there is a space and there is a next letter
+        if (letter === " " && input[i + 1]) {
+            i++;
+            result += input[i].toUpperCase();
+        }
+        else {
+            result += letter;
+        }
+    }
+    return result;
+};
+var pascalCase = function (input) {
+    var result = camelCase(input);
+    return result[0].toUpperCase() + result.slice(1);
+};
+var snakeCase = function (input) {
+    var result = "";
+    for (var index = 0; index < input.length; index++) {
+        var letter = input[index];
+        // -- if the 1st letter is a space, it will be trimmed
+        if (index === 0 && letter === " ") {
+            continue;
+        }
+        // -- if the last letter is a space, it will be trimmed
+        if (index === input.length - 1 && letter === " ") {
+            break;
+        }
+        if (letter === " ") {
+            result += "_";
+        }
+        else {
+            result += letter;
+        }
+    }
+    return result;
+};
+var kebabCase = function (input) {
+    var result = "";
+    for (var index = 0; index < input.length; index++) {
+        var letter = input[index];
+        // -- if the 1st letter is a space, it will be trimmed
+        if (index === 0 && letter === " ") {
+            continue;
+        }
+        // -- if the last letter is a space, it will be trimmed
+        if (index === input.length - 1 && letter === " ") {
+            break;
+        }
+        if (letter === " ") {
+            result += "-";
+        }
+        else {
+            result += letter;
+        }
+    }
+    return result;
+};
+var titleCase = function (input) {
+    var result = "";
+    for (var index = 0; index < input.length; index++) {
+        var letter = input[index];
+        // -- if the 1st letter is a space, it will be trimmed
+        if (index === 0 && letter === " ") {
+            // -- increment to the start of the next word
+            index++;
+            result += input[index].toUpperCase();
+            continue;
+        }
+        else if (index === 0) {
+            result += letter.toUpperCase();
+            continue;
+        }
+        // -- if the last letter is a space, it will be trimmed
+        if (index === input.length - 1 && letter === " ") {
+            break;
+        }
+        if (letter === " ") {
+            result += " ";
+            // -- increment to the start of the next word
+            index++;
+            result += input[index].toUpperCase();
+        }
+        else {
+            result += letter;
+        }
+    }
+    return result;
+};
+var vowelCase = function (input) {
+    var result = "";
+    for (var index = 0; index < input.length; index++) {
+        var letter = input[index];
+        if (letter === "a" ||
+            letter === "e" ||
+            letter === "i" ||
+            letter === "o" ||
+            letter === "u") {
+            result += letter.toUpperCase();
+        }
+        else {
+            result += letter;
+        }
+    }
+    return result;
+};
+var consonantCase = function (input) {
+    var result = "";
+    for (var index = 0; index < input.length; index++) {
+        var letter = input[index];
+        if (letter !== "a" &&
+            letter !== "e" &&
+            letter !== "i" &&
+            letter !== "o" &&
+            letter !== "u") {
+            result += letter.toUpperCase();
+        }
+        else {
+            result += letter;
+        }
+    }
+    return result;
+};
+var upperCase = function (input) {
+    var result = "";
+    for (var index = 0; index < input.length; index++) {
+        var letter = input[index];
+        result += letter.toUpperCase();
+    }
+    return result;
+};
+var lowerCase = function (input) {
+    var result = "";
+    for (var index = 0; index < input.length; index++) {
+        var letter = input[index];
+        result += letter.toLowerCase();
+    }
+    return result;
+};
+console.log(makeCase("this is a string", "camel"));
+console.log(makeCase("this is a string", "pascal"));
+console.log(makeCase("this is a string", "snake"));
+console.log(makeCase("this is a string", "kebab"));
+console.log(makeCase("this is a string", "title"));
+console.log(makeCase("this is a string", "vowel"));
+console.log(makeCase("this is a string", "consonant"));
+console.log(makeCase("this is a string", ["upper", "snake"]));
+// // -- kata 12
+// const organizeInstructors = function (instructors) {
+//   let newObj = {};
+//   // -- Loop through the values of an array:
+//   for (const instructor of instructors) {
+//     let name = instructor.name;
+//     let course = instructor.course;
+//     // console.log("1 course");
+//     // console.log(course);
+//     // -- if this is the 1st time the course is iterated over THEN initialize it with an empty array
+//     if (newObj[course] === undefined) {
+//       newObj[course] = [];
+//       // console.log("2 value for: newObj");
+//       // console.log(newObj);
+//     }
+//     newObj[course].push(name);
+//     // console.log("3 value for: newObj ");
+//     // console.log(newObj);
+//   }
+//   return newObj;
+// };
+// console.log(
+//   organizeInstructors([
+//     { name: "Samuel", course: "iOS" },
+//     { name: "Victoria", course: "Web" },
+//     { name: "Karim", course: "Web" },
+//     { name: "Donald", course: "Web" },
+//   ])
+// );
+// console.log(
+//   organizeInstructors([
+//     { name: "Brendan", course: "Blockchain" },
+//     { name: "David", course: "Web" },
+//     { name: "Martha", course: "iOS" },
+//     { name: "Carlos", course: "Web" },
+//   ])
+// );
+// {
+//   iOS: ["Samuel"],
+//   Web: ["Victoria", "Karim", "Donald"]
+// }
+// {
+//   Blockchain: ["Brendan"],
+//   Web: ["David", "Carlos"],
+//   iOS: ["Martha"]
+// }
 // // -- kata 11
 // interface cashChange {
 //   twentyDollar?: number;
@@ -37,41 +269,41 @@ console.log(organizeInstructors([
 //   // -- for twentyDollar
 //   result = modulusRemainder(2000, cash - total);
 //   if (result.times !== 0) {
-//     changeObj = { ...changeObj, twentyDollar: result.times };
+//     changeObj.twentyDollar = result.times;
 //   }
 //   // -- for tenDollar
 //   result = modulusRemainder(1000, result.remainder);
 //   if (result.times !== 0) {
-//     changeObj = { ...changeObj, tenDollar: result.times };
+//     changeObj.tenDollar = result.times;
 //   }
 //   // -- and so on for other change denomination
 //   result = modulusRemainder(500, result.remainder);
 //   if (result.times !== 0) {
-//     changeObj = { ...changeObj, fiveDollar: result.times };
+//     changeObj.fiveDollar = result.times;
 //   }
 //   result = modulusRemainder(200, result.remainder);
 //   if (result.times !== 0) {
-//     changeObj = { ...changeObj, twoDollar: result.times };
+//     changeObj.twoDollar = result.times;
 //   }
 //   result = modulusRemainder(100, result.remainder);
 //   if (result.times !== 0) {
-//     changeObj = { ...changeObj, oneDollar: result.times };
+//     changeObj.oneDollar = result.times;
 //   }
 //   result = modulusRemainder(25, result.remainder);
 //   if (result.times !== 0) {
-//     changeObj = { ...changeObj, quarter: result.times };
+//     changeObj.quarter = result.times;
 //   }
 //   result = modulusRemainder(10, result.remainder);
 //   if (result.times !== 0) {
-//     changeObj = { ...changeObj, dime: result.times };
+//     changeObj.dime = result.times;
 //   }
 //   result = modulusRemainder(5, result.remainder);
 //   if (result.times !== 0) {
-//     changeObj = { ...changeObj, nickle: result.times };
+//     changeObj.nickle = result.times;
 //   }
 //   result = modulusRemainder(1, result.remainder);
 //   if (result.times !== 0) {
-//     changeObj = { ...changeObj, penny: result.times };
+//     changeObj.penny = result.times;
 //   }
 //   return changeObj;
 // };
