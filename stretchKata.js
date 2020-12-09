@@ -1,204 +1,331 @@
-// -- kata 13
-var makeCase = function (input, styles) {
-    var result = input;
-    // -- check if styles is a string
-    if (typeof styles === "string")
-        return cycleThroughStyles(input, styles);
-    // -- if styles is an array
-    // -- assume that the styles array passed in in already in the correct order of precedence
-    for (var _i = 0, styles_1 = styles; _i < styles_1.length; _i++) {
-        var style = styles_1[_i];
-        result = cycleThroughStyles(result, style);
-    }
-    return result;
+// -- kata 15
+var squareCode = function (message) {
+    var newText = stripSpaces(message);
+    var numCol = Math.ceil(Math.sqrt(newText.length));
+    var boxOfString = squareString(newText, numCol);
+    var scrambledText = scrambleSquare(boxOfString);
+    return scrambledText;
 };
-var cycleThroughStyles = function (input, style) {
-    var result;
-    switch (style) {
-        case "camel":
-            result = camelCase(input);
-            break;
-        case "pascal":
-            result = pascalCase(input);
-            break;
-        case "snake":
-            result = snakeCase(input);
-            break;
-        case "kebab":
-            result = kebabCase(input);
-            break;
-        case "title":
-            result = titleCase(input);
-            break;
-        case "vowel":
-            result = vowelCase(input);
-            break;
-        case "consonant":
-            result = consonantCase(input);
-            break;
-        case "upper":
-            result = upperCase(input);
-            break;
-        case "lower":
-            result = lowerCase(input);
-            break;
-        default:
-            break;
-    }
-    return result;
-};
-// -- from previous kata
-var camelCase = function (input) {
+var stripSpaces = function (message) {
     var result = "";
     // -- loop through the string
-    for (var i = 0; i < input.length; i++) {
-        var letter = input[i];
-        // -- condition where there is a space and there is a next letter
-        if (letter === " " && input[i + 1]) {
-            i++;
-            result += input[i].toUpperCase();
-        }
-        else {
-            result += letter;
-        }
-    }
-    return result;
-};
-var pascalCase = function (input) {
-    var result = camelCase(input);
-    return result[0].toUpperCase() + result.slice(1);
-};
-var snakeCase = function (input) {
-    var result = "";
-    for (var index = 0; index < input.length; index++) {
-        var letter = input[index];
-        // -- if the 1st letter is a space, it will be trimmed
-        if (index === 0 && letter === " ") {
-            continue;
-        }
-        // -- if the last letter is a space, it will be trimmed
-        if (index === input.length - 1 && letter === " ") {
-            break;
-        }
+    for (var i = 0; i < message.length; i++) {
+        var letter = message[i];
+        // -- condition where there is a space
         if (letter === " ") {
-            result += "_";
-        }
-        else {
-            result += letter;
-        }
-    }
-    return result;
-};
-var kebabCase = function (input) {
-    var result = "";
-    for (var index = 0; index < input.length; index++) {
-        var letter = input[index];
-        // -- if the 1st letter is a space, it will be trimmed
-        if (index === 0 && letter === " ") {
             continue;
         }
-        // -- if the last letter is a space, it will be trimmed
-        if (index === input.length - 1 && letter === " ") {
-            break;
-        }
-        if (letter === " ") {
-            result += "-";
-        }
         else {
             result += letter;
         }
     }
     return result;
 };
-var titleCase = function (input) {
-    var result = "";
-    for (var index = 0; index < input.length; index++) {
-        var letter = input[index];
-        // -- if the 1st letter is a space, it will be trimmed
-        if (index === 0 && letter === " ") {
-            // -- increment to the start of the next word
-            index++;
-            result += input[index].toUpperCase();
-            continue;
-        }
-        else if (index === 0) {
-            result += letter.toUpperCase();
-            continue;
-        }
-        // -- if the last letter is a space, it will be trimmed
-        if (index === input.length - 1 && letter === " ") {
-            break;
-        }
-        if (letter === " ") {
-            result += " ";
-            // -- increment to the start of the next word
-            index++;
-            result += input[index].toUpperCase();
-        }
-        else {
-            result += letter;
+var squareString = function (text, col) {
+    var resultArray = [];
+    var rowString = "";
+    for (var i = 0; i < text.length; i++) {
+        rowString += text[i];
+        if ((i + 1) % col === 0) {
+            resultArray.push(rowString);
+            rowString = ""; // -- reset this variable once pushed
         }
     }
-    return result;
-};
-var vowelCase = function (input) {
-    var result = "";
-    for (var index = 0; index < input.length; index++) {
-        var letter = input[index];
-        if (letter === "a" ||
-            letter === "e" ||
-            letter === "i" ||
-            letter === "o" ||
-            letter === "u") {
-            result += letter.toUpperCase();
-        }
-        else {
-            result += letter;
-        }
+    // -- push the last bit of the string that shorter than the col length to the array
+    if (text.length % col !== 0) {
+        resultArray.push(rowString);
     }
-    return result;
+    return resultArray;
 };
-var consonantCase = function (input) {
-    var result = "";
-    for (var index = 0; index < input.length; index++) {
-        var letter = input[index];
-        if (letter !== "a" &&
-            letter !== "e" &&
-            letter !== "i" &&
-            letter !== "o" &&
-            letter !== "u") {
-            result += letter.toUpperCase();
+var scrambleSquare = function (textArray) {
+    var col = textArray[0].length;
+    var secretStr = "";
+    // -- looping through each row for a given col
+    for (var i = 0; i < col; i++) {
+        for (var _i = 0, textArray_1 = textArray; _i < textArray_1.length; _i++) {
+            var text = textArray_1[_i];
+            // -- for when the last row has less char than the toher rows, value will be undefined and thus ignored
+            if (text[i] !== undefined) {
+                secretStr += text[i];
+            }
         }
-        else {
-            result += letter;
-        }
+        secretStr += " ";
     }
-    return result;
+    return secretStr;
 };
-var upperCase = function (input) {
-    var result = "";
-    for (var index = 0; index < input.length; index++) {
-        var letter = input[index];
-        result += letter.toUpperCase();
-    }
-    return result;
-};
-var lowerCase = function (input) {
-    var result = "";
-    for (var index = 0; index < input.length; index++) {
-        var letter = input[index];
-        result += letter.toLowerCase();
-    }
-    return result;
-};
-console.log(makeCase("this is a string", "camel"));
-console.log(makeCase("this is a string", "pascal"));
-console.log(makeCase("this is a string", "snake"));
-console.log(makeCase("this is a string", "kebab"));
-console.log(makeCase("this is a string", "title"));
-console.log(makeCase("this is a string", "vowel"));
-console.log(makeCase("this is a string", "consonant"));
-console.log(makeCase("this is a string", ["upper", "snake"]));
+console.log(squareCode("chill out"));
+console.log(squareCode("feed the dog"));
+console.log(squareCode("have a nice day"));
+console.log(squareCode("if man was meant to stay on the ground god would have given us roots"));
+// // -- Kata 14
+// const urlDecode = function (text: string): object {
+//   let result = {};
+//   let slicedArray = stringSlicerAtChar(text, "&");
+//   // -- make each item of the array into an object, then combine the objects into a single object
+//   for (const keyPairStr of slicedArray) {
+//     let i = indexOfSpecialCharacter(keyPairStr, "=");
+//     result = { ...result, ...textSlicedToObj(keyPairStr, i) };
+//   }
+//   return result;
+// };
+// // -- return the index of the FIRST special char
+// const indexOfSpecialCharacter = function (text: string, char: string): number {
+//   for (let i = 0; i < text.length; i++) {
+//     if (text[i] === char) {
+//       return i;
+//     }
+//   }
+//   // -- returns '-1' if not found
+//   return -1;
+// };
+// // -- slices a key value pair string into an object
+// const textSlicedToObj = function (text: string, index: number): object {
+//   // -- note that index is where the special character is located
+//   let key = "";
+//   let value = "";
+//   for (let i = 0; i < index; i++) {
+//     key += text[i];
+//   }
+//   for (let i = index + 1; i < text.length; i++) {
+//     if (text[i] === "%" && text[i + 1] === "2" && text[i + 2] === "0") {
+//       value += " ";
+//       i += 2; // -- increment it past the special '%20' str
+//     } else {
+//       value += text[i];
+//     }
+//   }
+//   return { [key]: value };
+// };
+// const stringSlicerAtChar = function (text: string, char: string): string[] {
+//   let result = [];
+//   let firstPart = "";
+//   let endPart = "";
+//   let IndexOfSpecialCharFound = indexOfSpecialCharacter(text, char); // -- returns '-1' if not found
+//   // -- if no special char is found in text
+//   if (IndexOfSpecialCharFound === -1) {
+//     return [text];
+//   } else {
+//     // -- if the special char is found in text
+//     // -- slice before the special char
+//     for (let i = 0; i < IndexOfSpecialCharFound; i++) {
+//       firstPart += text[i];
+//     }
+//     // -- slice after the special char
+//     for (let i = IndexOfSpecialCharFound + 1; i < text.length; i++) {
+//       endPart += text[i];
+//     }
+//     result.push(firstPart);
+//     // -- do recursive magic
+//     result.push(...stringSlicerAtChar(endPart, char));
+//   }
+//   return result;
+// };
+// console.log(urlDecode("duck=rubber"));
+// console.log(urlDecode("bootcamp=Lighthouse%20Labs"));
+// console.log(urlDecode("duck=rubber&bootcamp=Lighthouse%20Labs"));
+// console.log(
+//   urlDecode(
+//     "city=Vancouver&weather=lots%20of%20rain&bootcamp=Lighthouse%20Labs&course=javascript"
+//   )
+// );
+// console.log(urlDecode("city=Vancouver&weather=lots%20of%20rain"));
+// console.log(urlDecode("city=Vancouver&weather=lots%20of%20rain").weather);
+// // -- kata 13
+// const makeCase = function (input: string, styles: any): string {
+//   let result = input;
+//   // -- check if styles is a string
+//   if (typeof styles === "string") return cycleThroughStyles(input, styles);
+//   // -- if styles is an array
+//   // -- assume that the styles array passed in in already in the correct order of precedence
+//   for (const style of styles) {
+//     result = cycleThroughStyles(result, style);
+//   }
+//   return result;
+// };
+// const cycleThroughStyles = function (input: string, style: string) {
+//   let result: string;
+//   switch (style) {
+//     case "camel":
+//       result = camelCase(input);
+//       break;
+//     case "pascal":
+//       result = pascalCase(input);
+//       break;
+//     case "snake":
+//       result = snakeCase(input);
+//       break;
+//     case "kebab":
+//       result = kebabCase(input);
+//       break;
+//     case "title":
+//       result = titleCase(input);
+//       break;
+//     case "vowel":
+//       result = vowelCase(input);
+//       break;
+//     case "consonant":
+//       result = consonantCase(input);
+//       break;
+//     case "upper":
+//       result = upperCase(input);
+//       break;
+//     case "lower":
+//       result = lowerCase(input);
+//       break;
+//     default:
+//       break;
+//   }
+//   return result;
+// };
+// // -- from previous kata
+// const camelCase = function (input: string): string {
+//   let result: string = "";
+//   // -- loop through the string
+//   for (let i = 0; i < input.length; i++) {
+//     const letter = input[i];
+//     // -- condition where there is a space and there is a next letter
+//     if (letter === " " && input[i + 1]) {
+//       i++;
+//       result += input[i].toUpperCase();
+//     } else {
+//       result += letter;
+//     }
+//   }
+//   return result;
+// };
+// const pascalCase = function (input: string): string {
+//   let result = camelCase(input);
+//   return result[0].toUpperCase() + result.slice(1);
+// };
+// const snakeCase = function (input: string): string {
+//   let result = "";
+//   for (let index = 0; index < input.length; index++) {
+//     const letter = input[index];
+//     // -- if the 1st letter is a space, it will be trimmed
+//     if (index === 0 && letter === " ") {
+//       continue;
+//     }
+//     // -- if the last letter is a space, it will be trimmed
+//     if (index === input.length - 1 && letter === " ") {
+//       break;
+//     }
+//     if (letter === " ") {
+//       result += "_";
+//     } else {
+//       result += letter;
+//     }
+//   }
+//   return result;
+// };
+// const kebabCase = function (input: string): string {
+//   let result = "";
+//   for (let index = 0; index < input.length; index++) {
+//     const letter = input[index];
+//     // -- if the 1st letter is a space, it will be trimmed
+//     if (index === 0 && letter === " ") {
+//       continue;
+//     }
+//     // -- if the last letter is a space, it will be trimmed
+//     if (index === input.length - 1 && letter === " ") {
+//       break;
+//     }
+//     if (letter === " ") {
+//       result += "-";
+//     } else {
+//       result += letter;
+//     }
+//   }
+//   return result;
+// };
+// const titleCase = function (input: string): string {
+//   let result = "";
+//   for (let index = 0; index < input.length; index++) {
+//     const letter = input[index];
+//     // -- if the 1st letter is a space, it will be trimmed
+//     if (index === 0 && letter === " ") {
+//       // -- increment to the start of the next word
+//       index++;
+//       result += input[index].toUpperCase();
+//       continue;
+//     } else if (index === 0) {
+//       result += letter.toUpperCase();
+//       continue;
+//     }
+//     // -- if the last letter is a space, it will be trimmed
+//     if (index === input.length - 1 && letter === " ") {
+//       break;
+//     }
+//     if (letter === " ") {
+//       result += " ";
+//       // -- increment to the start of the next word
+//       index++;
+//       result += input[index].toUpperCase();
+//     } else {
+//       result += letter;
+//     }
+//   }
+//   return result;
+// };
+// const vowelCase = function (input: string): string {
+//   let result = "";
+//   for (let index = 0; index < input.length; index++) {
+//     const letter = input[index];
+//     if (
+//       letter === "a" ||
+//       letter === "e" ||
+//       letter === "i" ||
+//       letter === "o" ||
+//       letter === "u"
+//     ) {
+//       result += letter.toUpperCase();
+//     } else {
+//       result += letter;
+//     }
+//   }
+//   return result;
+// };
+// const consonantCase = function (input: string): string {
+//   let result = "";
+//   for (let index = 0; index < input.length; index++) {
+//     const letter = input[index];
+//     if (
+//       letter !== "a" &&
+//       letter !== "e" &&
+//       letter !== "i" &&
+//       letter !== "o" &&
+//       letter !== "u"
+//     ) {
+//       result += letter.toUpperCase();
+//     } else {
+//       result += letter;
+//     }
+//   }
+//   return result;
+// };
+// const upperCase = function (input: string): string {
+//   let result = "";
+//   for (let index = 0; index < input.length; index++) {
+//     const letter = input[index];
+//     result += letter.toUpperCase();
+//   }
+//   return result;
+// };
+// const lowerCase = function (input: string): string {
+//   let result = "";
+//   for (let index = 0; index < input.length; index++) {
+//     const letter = input[index];
+//     result += letter.toLowerCase();
+//   }
+//   return result;
+// };
+// console.log(makeCase("this is a string", "camel"));
+// console.log(makeCase("this is a string", "pascal"));
+// console.log(makeCase("this is a string", "snake"));
+// console.log(makeCase("this is a string", "kebab"));
+// console.log(makeCase("this is a string", "title"));
+// console.log(makeCase("this is a string", "vowel"));
+// console.log(makeCase("this is a string", "consonant"));
+// console.log(makeCase("this is a string", ["upper", "snake"]));
 // // -- kata 12
 // const organizeInstructors = function (instructors) {
 //   let newObj = {};

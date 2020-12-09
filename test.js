@@ -1,5 +1,7 @@
 let result = "hello";
 
+result[8] = "H";
+
 console.log(typeof result);
 // console.log(result[0]);
 
