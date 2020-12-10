@@ -1,8 +1,19 @@
-let result = "hello";
+let number = "489465a";
 
-result[8] = "H";
+let result = filterInt(number);
 
-console.log(typeof result);
+console.log(result);
+
+console.log(isNaN(result));
+
+function filterInt(value) {
+  if (/^[-+]?(\d+|Infinity)$/.test(value)) {
+    return Number(value);
+  } else {
+    return NaN;
+  }
+}
+
 // console.log(result[0]);
 
 //   organizeInstructors([
