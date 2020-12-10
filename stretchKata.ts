@@ -1,70 +1,286 @@
-// -- kata 15
-const squareCode = function (message: string) {
-  let newText = stripSpaces(message);
-  let numCol: number = Math.ceil(Math.sqrt(newText.length));
-  let boxOfString = squareString(newText, numCol);
-  let scrambledText = scrambleSquare(boxOfString);
+// kata 18
 
-  return scrambledText;
-};
+// // -- kata 17
+// interface Data {
+//   east: number;
+//   north: number;
+//   facingDirection: string;
+// }
 
-const stripSpaces = function (message: string): string {
-  let result: string = "";
-  // -- loop through the string
-  for (let i = 0; i < message.length; i++) {
-    const letter = message[i];
-    // -- condition where there is a space
-    if (letter === " ") {
-      continue;
-    } else {
-      result += letter;
-    }
-  }
-  return result;
-};
+// const blocksAway = function (directions): object {
+//   let Obj: Data = { east: 0, north: 0, facingDirection: "" };
+//   let direction: string;
+//   let distance: number;
 
-const squareString = function (text: string, col: number): string[] {
-  let resultArray = [];
-  let rowString = "";
+//   for (let i = 0; i + 1 < directions.length; i += 2) {
+//     direction = directions[i];
+//     distance = directions[i + 1];
+//     Obj = updateCoordinate(Obj, direction, distance);
+//   }
+//   return { east: Obj.east, north: Obj.north };
+// };
 
-  for (let i = 0; i < text.length; i++) {
-    rowString += text[i];
-    if ((i + 1) % col === 0) {
-      resultArray.push(rowString);
-      rowString = ""; // -- reset this variable once pushed
-    }
-  }
-  // -- push the last bit of the string that shorter than the col length to the array
-  if (text.length % col !== 0) {
-    resultArray.push(rowString);
-  }
-  return resultArray;
-};
+// const updateCoordinate = function (Obj, direction, distance) {
+//   let newObj = Obj;
 
-const scrambleSquare = function (textArray: string[]): string {
-  let col = textArray[0].length;
-  let secretStr = "";
-  // -- looping through each row for a given col
-  for (let i = 0; i < col; i++) {
-    for (const text of textArray) {
-      // -- for when the last row has less char than the toher rows, value will be undefined and thus ignored
-      if (text[i] !== undefined) {
-        secretStr += text[i];
-      }
-    }
-    secretStr += " ";
-  }
-  return secretStr;
-};
+//   // -- initial setup for the 1st pair
+//   if (Obj.facingDirection === "") {
+//     // -- BASED on the supposed resuls, it seems that the 1st left turn means going north instead of going west
+//     if (direction === "left") {
+//       newObj = { east: 0, north: distance, facingDirection: "north" };
+//     }
+//     if (direction === "right") {
+//       newObj = { east: distance, north: 0, facingDirection: "east" };
+//     }
+//     return newObj;
+//   }
 
-console.log(squareCode("chill out"));
-console.log(squareCode("feed the dog"));
-console.log(squareCode("have a nice day"));
+//   switch (Obj.facingDirection) {
+//     case "west":
+//       if (direction === "left") {
+//         newObj.facingDirection = "south";
+//         newObj.north -= distance;
+//       }
+//       if (direction === "right") {
+//         newObj.facingDirection = "north";
+//         newObj.north += distance;
+//       }
+//       break;
+//     case "east":
+//       if (direction === "left") {
+//         newObj.facingDirection = "north";
+//         newObj.north += distance;
+//       }
+//       if (direction === "right") {
+//         newObj.facingDirection = "south";
+//         newObj.north -= distance;
+//       }
+//       break;
+//     case "north":
+//       if (direction === "left") {
+//         newObj.facingDirection = "west";
+//         newObj.east -= distance;
+//       }
+//       if (direction === "right") {
+//         newObj.facingDirection = "east";
+//         newObj.east += distance;
+//       }
+//       break;
+//     case "south":
+//       if (direction === "left") {
+//         newObj.facingDirection = "east";
+//         newObj.east += distance;
+//       }
+//       if (direction === "right") {
+//         newObj.facingDirection = "west";
+//         newObj.east -= distance;
+//       }
+//       break;
+
+//     default:
+//       break;
+//   }
+//   return newObj;
+// };
+
+console.log(blocksAway(["right", 2, "left", 3, "left", 1]));
 console.log(
-  squareCode(
-    "if man was meant to stay on the ground god would have given us roots"
-  )
+  blocksAway([
+    "left",
+    1,
+    "right",
+    1,
+    "left",
+    1,
+    "right",
+    1,
+    "left",
+    1,
+    "right",
+    1,
+  ])
 );
+console.log(blocksAway(["left", 3, "right", 1, "right", 3, "right", 1]));
+
+// // -- kata 16
+// const generateBoard = function (
+//   whiteQueen: [number, number],
+//   blackQueen: [number, number]
+// ) {
+//   let board = [
+//     [0, 0, 0, 0, 0, 0, 0, 0],
+//     [0, 0, 0, 0, 0, 0, 0, 0],
+//     [0, 0, 0, 0, 0, 0, 0, 0],
+//     [0, 0, 0, 0, 0, 0, 0, 0],
+//     [0, 0, 0, 0, 0, 0, 0, 0],
+//     [0, 0, 0, 0, 0, 0, 0, 0],
+//     [0, 0, 0, 0, 0, 0, 0, 0],
+//     [0, 0, 0, 0, 0, 0, 0, 0],
+//   ];
+//   const [whiteY, whiteX] = whiteQueen;
+//   const [blackY, blackX] = blackQueen;
+
+//   // -- confirm position of the white queen and black queen is not the same
+//   // -- can't compare arrays directly with vanilla js so:
+//   if (whiteQueen[0] === blackQueen[0] && whiteQueen[1] === blackQueen[1]) {
+//     return new Error("Both queens can't be on the same coordinate");
+//   }
+//   board[whiteY][whiteX] = 1;
+//   board[blackY][blackX] = 1;
+
+//   return board;
+// };
+
+// const queenThreat = function (board) {
+//   // -- probably more efficient to pass in and compare the coordinates of the 2 queens, but then this defeats the purpose of having the board as a parametre
+//   const firstQueenCoord = findFirstQueen(board);
+//   const threat = threatCheck(board, firstQueenCoord);
+//   return threat;
+// };
+
+// // -- finds the coordinater of the 1st queen searching from top left to bottom right (each row left to right)
+// const findFirstQueen = function (board) {
+//   for (let coordY = 0; coordY < board.length; coordY++) {
+//     for (let coordX = 0; coordX < board.length; coordX++) {
+//       if (board[coordY][coordX] === 1) {
+//         return [coordY, coordX];
+//       }
+//     }
+//   }
+// };
+
+// const threatCheck = function (board, firstQueenCoord): boolean {
+//   const [coordY, coordX] = firstQueenCoord;
+//   let xCheck: number = 0;
+//   let yCheck: number = 0;
+//   let CoordXPositiveIncrement: number = coordX;
+//   let CoordXNegativeIncrement: number = coordX;
+
+//   // -- check if 2 queens on the same row
+//   for (let i = 0; i < board.length; i++) {
+//     if (board[coordY][i] === 1) {
+//       xCheck += 1;
+//     }
+//   }
+//   if (xCheck === 2) {
+//     return true;
+//   }
+//   // -- check if 2 queens on the same column
+//   for (let i = 0; i < board.length; i++) {
+//     if (board[i][coordX] === 1) {
+//       yCheck += 1;
+//     }
+//   }
+//   if (yCheck === 2) {
+//     return true;
+//   }
+//   // -- check diagonally downwards
+//   for (let y = coordY + 1; y < board.length; y++) {
+//     CoordXPositiveIncrement++;
+//     CoordXNegativeIncrement--;
+
+//     if (
+//       CoordXPositiveIncrement < board.length &&
+//       board[y][CoordXPositiveIncrement] === 1
+//     ) {
+//       return true;
+//     }
+//     if (
+//       CoordXNegativeIncrement > -1 &&
+//       board[y][CoordXNegativeIncrement] === 1
+//     ) {
+//       return true;
+//     }
+//   }
+//   // -- if no threats are found then:
+//   return false;
+// };
+
+// let whiteQueen = [0, 5];
+// let blackQueen = [5, 0];
+// let generatedBoard = generateBoard(whiteQueen, blackQueen);
+// console.log(generatedBoard);
+// console.log(queenThreat(generatedBoard));
+
+// let whiteQueen = [0, 0];
+// let blackQueen = [5, 7];
+// let generatedBoard = generateBoard(whiteQueen, blackQueen);
+// console.log(generatedBoard);
+// console.log(queenThreat(generatedBoard));
+
+// let whiteQueen = [0, 2];
+// let blackQueen = [5, 2];
+// let generatedBoard = generateBoard(whiteQueen, blackQueen);
+// console.log(generatedBoard);
+// console.log(queenThreat(generatedBoard));
+
+// // -- kata 15
+// const squareCode = function (message: string) {
+//   let newText = stripSpaces(message);
+//   let numCol: number = Math.ceil(Math.sqrt(newText.length));
+//   let boxOfString = squareString(newText, numCol);
+//   let scrambledText = scrambleSquare(boxOfString);
+
+//   return scrambledText;
+// };
+
+// const stripSpaces = function (message: string): string {
+//   let result: string = "";
+//   // -- loop through the string
+//   for (let i = 0; i < message.length; i++) {
+//     const letter = message[i];
+//     // -- condition where there is a space
+//     if (letter === " ") {
+//       continue;
+//     } else {
+//       result += letter;
+//     }
+//   }
+//   return result;
+// };
+
+// const squareString = function (text: string, col: number): string[] {
+//   let resultArray = [];
+//   let rowString = "";
+
+//   for (let i = 0; i < text.length; i++) {
+//     rowString += text[i];
+//     if ((i + 1) % col === 0) {
+//       resultArray.push(rowString);
+//       rowString = ""; // -- reset this variable once pushed
+//     }
+//   }
+//   // -- push the last bit of the string that shorter than the col length to the array
+//   if (text.length % col !== 0) {
+//     resultArray.push(rowString);
+//   }
+//   return resultArray;
+// };
+
+// const scrambleSquare = function (textArray: string[]): string {
+//   let col = textArray[0].length;
+//   let secretStr = "";
+//   // -- looping through each row for a given col
+//   for (let i = 0; i < col; i++) {
+//     for (const text of textArray) {
+//       // -- for when the last row has less char than the toher rows, value will be undefined and thus ignored
+//       if (text[i] !== undefined) {
+//         secretStr += text[i];
+//       }
+//     }
+//     secretStr += " ";
+//   }
+//   return secretStr;
+// };
+
+// console.log(squareCode("chill out"));
+// console.log(squareCode("feed the dog"));
+// console.log(squareCode("have a nice day"));
+// console.log(
+//   squareCode(
+//     "if man was meant to stay on the ground god would have given us roots"
+//   )
+// );
 
 // // -- Kata 14
 // const urlDecode = function (text: string): object {
