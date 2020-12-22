@@ -17,8 +17,15 @@
 //   nSmall = temp;
 // }
 // return temp;
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 exports.__esModule = true;
-exports.canSum = void 0;
+exports.howSum = void 0;
 // -- recursive witht memoization
 // if (n in memo) return memo[n];
 // if (n <= 2) return 1;
@@ -84,33 +91,79 @@ exports.canSum = void 0;
 // 	return memo[targetSum]
 // }
 // -- course solution
-exports.canSum = function (targetSum, numbers, memo) {
+// export const canSum = (
+// 	targetSum: number,
+// 	numbers: number[],
+// 	memo = {}
+// ): boolean => {
+// 	if (targetSum in memo) {
+// 		return memo[targetSum]
+// 	}
+// 	if (targetSum === 0) return true
+// 	if (targetSum < 0) return false
+// 	for (const num of numbers) {
+// 		if (canSum(targetSum - num, numbers, memo) === true) {
+// 			memo[targetSum] = true
+// 			// -- note that the aswer is not memo[targetSum - num] = true. if you return true, then you know that the result will be true at targetSum
+// 			return true
+// 		}
+// 	}
+// 	memo[targetSum] = false
+// 	return memo[targetSum]
+// }
+// // console.log(canSum(10, [3, 2, 6, 1])) // true
+// // console.log(canSum(10, [5])) // true
+// // console.log(canSum(10, [3, 2, 6])) // true
+// // console.log(canSum(10, [3, 7, 5, 9])) // true
+// // console.log(canSum(10, [4, 7, 9])) // false
+// console.log(canSum(7, [2, 3])) // true
+// console.log(canSum(7, [5, 3, 4, 7])) // true
+// console.log(canSum(7, [2, 4])) // false
+// console.log(canSum(8, [2, 3, 5])) // true
+// console.log(canSum(300, [7, 14])) // false
+/*******************************************************************/
+/*******************************************************************/
+// -- my solution
+// export const howSum = (targetSum: number, numbers: number[], result = []) => {
+// 	if (targetSum < 0) return null
+// 	if (targetSum === 0) {
+// 		return true
+// 	}
+// 	for (const num of numbers) {
+// 		let remainder = targetSum - num
+// 		if (howSum(remainder, numbers, result)) {
+// 			result.push(num)
+// 			break
+// 		}
+// 	}
+// 	if (result.length === 0) return null
+// 	return result
+// }
+// -- by course
+exports.howSum = function (targetSum, numbers, memo) {
     if (memo === void 0) { memo = {}; }
-    if (targetSum in memo) {
+    if (targetSum in memo)
         return memo[targetSum];
-    }
     if (targetSum === 0)
-        return true;
-    if (targetSum < 0)
-        return false;
+        return [];
+    if (targetSum <= 0)
+        return null;
     for (var _i = 0, numbers_1 = numbers; _i < numbers_1.length; _i++) {
         var num = numbers_1[_i];
-        if (exports.canSum(targetSum - num, numbers, memo) === true) {
-            memo[targetSum] = true;
-            // -- note that the aswer is not memo[targetSum - num] = true. if you return true, then you know that the result will be true at targetSum
-            return true;
+        var result = exports.howSum(targetSum - num, numbers, memo);
+        if (result !== null) {
+            memo[targetSum] = __spreadArrays(result, [num]);
+            return memo[targetSum];
         }
     }
-    memo[targetSum] = false;
-    return memo[targetSum];
+    memo[targetSum] = null;
+    return null;
 };
-// console.log(canSum(10, [3, 2, 6, 1])) // true
-// console.log(canSum(10, [5])) // true
-// console.log(canSum(10, [3, 2, 6])) // true
-// console.log(canSum(10, [3, 7, 5, 9])) // true
-// console.log(canSum(10, [4, 7, 9])) // false
-console.log(exports.canSum(7, [2, 3])); // true
-console.log(exports.canSum(7, [5, 3, 4, 7])); // true
-console.log(exports.canSum(7, [2, 4])); // false
-console.log(exports.canSum(8, [2, 3, 5])); // true
-console.log(exports.canSum(300, [7, 14])); // false
+console.log(exports.howSum(7, [1])); // [1,1,1,1,1,1,1]
+console.log(exports.howSum(7, [7])); // [7]
+console.log(exports.howSum(7, [4])); // null
+console.log(exports.howSum(7, [2, 3])); // [3,2,2]
+console.log(exports.howSum(7, [5, 3, 4, 7])); // [4,3]
+console.log(exports.howSum(7, [2, 4])); // null
+console.log(exports.howSum(8, [2, 3, 5])); // [2,2,2,2]
+console.log(exports.howSum(300, [7, 14])); // null

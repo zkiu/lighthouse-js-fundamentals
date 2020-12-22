@@ -88,36 +88,83 @@
 // 	return memo[targetSum]
 // }
 // -- course solution
-export const canSum = (
-	targetSum: number,
-	numbers: number[],
-	memo = {}
-): boolean => {
-	if (targetSum in memo) {
-		return memo[targetSum]
-	}
-	if (targetSum === 0) return true
-	if (targetSum < 0) return false
+// export const canSum = (
+// 	targetSum: number,
+// 	numbers: number[],
+// 	memo = {}
+// ): boolean => {
+// 	if (targetSum in memo) {
+// 		return memo[targetSum]
+// 	}
+// 	if (targetSum === 0) return true
+// 	if (targetSum < 0) return false
+
+// 	for (const num of numbers) {
+// 		if (canSum(targetSum - num, numbers, memo) === true) {
+// 			memo[targetSum] = true
+// 			// -- note that the aswer is not memo[targetSum - num] = true. if you return true, then you know that the result will be true at targetSum
+// 			return true
+// 		}
+// 	}
+
+// 	memo[targetSum] = false
+// 	return memo[targetSum]
+// }
+
+// // console.log(canSum(10, [3, 2, 6, 1])) // true
+// // console.log(canSum(10, [5])) // true
+// // console.log(canSum(10, [3, 2, 6])) // true
+// // console.log(canSum(10, [3, 7, 5, 9])) // true
+// // console.log(canSum(10, [4, 7, 9])) // false
+// console.log(canSum(7, [2, 3])) // true
+// console.log(canSum(7, [5, 3, 4, 7])) // true
+// console.log(canSum(7, [2, 4])) // false
+// console.log(canSum(8, [2, 3, 5])) // true
+// console.log(canSum(300, [7, 14])) // false
+
+/*******************************************************************/
+/*******************************************************************/
+// -- my solution
+// export const howSum = (targetSum: number, numbers: number[], result = []) => {
+// 	if (targetSum < 0) return null
+// 	if (targetSum === 0) {
+// 		return true
+// 	}
+
+// 	for (const num of numbers) {
+// 		let remainder = targetSum - num
+// 		if (howSum(remainder, numbers, result)) {
+// 			result.push(num)
+// 			break
+// 		}
+// 	}
+
+// 	if (result.length === 0) return null
+// 	return result
+// }
+// -- by course
+export const howSum = (targetSum: number, numbers: number[], memo = {}) => {
+	if (targetSum in memo) return memo[targetSum]
+	if (targetSum === 0) return []
+	if (targetSum <= 0) return null
 
 	for (const num of numbers) {
-		if (canSum(targetSum - num, numbers, memo) === true) {
-			memo[targetSum] = true
-			// -- note that the aswer is not memo[targetSum - num] = true. if you return true, then you know that the result will be true at targetSum
-			return true
+		let result = howSum(targetSum - num, numbers, memo)
+		if (result !== null) {
+			memo[targetSum] = [...result, num]
+			return memo[targetSum]
 		}
 	}
 
-	memo[targetSum] = false
-	return memo[targetSum]
+	memo[targetSum] = null
+	return null
 }
 
-// console.log(canSum(10, [3, 2, 6, 1])) // true
-// console.log(canSum(10, [5])) // true
-// console.log(canSum(10, [3, 2, 6])) // true
-// console.log(canSum(10, [3, 7, 5, 9])) // true
-// console.log(canSum(10, [4, 7, 9])) // false
-console.log(canSum(7, [2, 3])) // true
-console.log(canSum(7, [5, 3, 4, 7])) // true
-console.log(canSum(7, [2, 4])) // false
-console.log(canSum(8, [2, 3, 5])) // true
-console.log(canSum(300, [7, 14])) // false
+console.log(howSum(7, [1])) // [1,1,1,1,1,1,1]
+console.log(howSum(7, [7])) // [7]
+console.log(howSum(7, [4])) // null
+console.log(howSum(7, [2, 3])) // [3,2,2]
+console.log(howSum(7, [5, 3, 4, 7])) // [4,3]
+console.log(howSum(7, [2, 4])) // null
+console.log(howSum(8, [2, 3, 5])) // [2,2,2,2]
+console.log(howSum(300, [7, 14])) // null

@@ -1,3 +1,42 @@
+// self change - using reducer
+let people = [
+	{name: 'Alice', age: 21},
+	{name: 'Max', age: 20},
+	{name: 'Jane', age: 20},
+	{name: 'Poo', age: 21},
+	{name: 'Burn', age: 23},
+]
+
+function groupBy(objArray: object[], property: string) {
+	let result = objArray.reduce((acc, currentValue) => {
+		// console.log('1 value for: acc ')
+		// console.log(acc)
+		// console.log('2 value for: currentValue ')
+		// console.log(currentValue)
+		let key = currentValue[property]
+		if (!acc[key]) {
+			acc[key] = []
+		}
+		acc[key].push(currentValue)
+		// console.log('3 NEW value for: acc ')
+		// console.log(acc)
+		return acc
+	}, {})
+
+	return JSON.stringify(result)
+}
+
+let groupedPeople = groupBy(people, 'age')
+console.log(groupedPeople)
+// groupedPeople is:
+// {
+//   20: [
+//     { name: 'Max', age: 20 },
+//     { name: 'Jane', age: 20 }
+//   ],
+//   21: [{ name: 'Alice', age: 21 }]
+// }
+
 // kata 18
 
 // // -- kata 17
@@ -83,24 +122,24 @@
 //   return newObj;
 // };
 
-console.log(blocksAway(["right", 2, "left", 3, "left", 1]));
-console.log(
-  blocksAway([
-    "left",
-    1,
-    "right",
-    1,
-    "left",
-    1,
-    "right",
-    1,
-    "left",
-    1,
-    "right",
-    1,
-  ])
-);
-console.log(blocksAway(["left", 3, "right", 1, "right", 3, "right", 1]));
+// console.log(blocksAway(['right', 2, 'left', 3, 'left', 1]))
+// console.log(
+// 	blocksAway([
+// 		'left',
+// 		1,
+// 		'right',
+// 		1,
+// 		'left',
+// 		1,
+// 		'right',
+// 		1,
+// 		'left',
+// 		1,
+// 		'right',
+// 		1,
+// 	])
+// )
+// console.log(blocksAway(['left', 3, 'right', 1, 'right', 3, 'right', 1]))
 
 // // -- kata 16
 // const generateBoard = function (

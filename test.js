@@ -1,66 +1,17 @@
-let number = "489465a";
+function canSum(main, numbers) {
+	if (main === 0) return true
+	if (main < 0) return false
 
-let result = filterInt(number);
+	for (const num of numbers) {
+		let remainder = main - num
 
-console.log(result);
+		if (canSum(remainder, numbers)) return true
+	}
 
-console.log(isNaN(result));
-
-function filterInt(value) {
-  if (/^[-+]?(\d+|Infinity)$/.test(value)) {
-    return Number(value);
-  } else {
-    return NaN;
-  }
+	return false
 }
 
-// console.log(result[0]);
-
-//   organizeInstructors([
-//     { name: "Samuel", course: "iOS" },
-//     { name: "Victoria", course: "Web" },
-//     { name: "Karim", course: "Web" },
-//     { name: "Donald", course: "Web" },
-//   ])
-// );
-
-// let newObj = {};
-
-// newObj.iOS = [];
-
-// newObj.iOS.push("Samuel");
-
-// newObj.web = [];
-
-// newObj.web.push("victoria");
-// newObj.web.push("karim");
-
-// console.log(newObj);
-
-// var savingsAccount = {
-//   balance: 1000,
-//   interestRatePercent: 1,
-//   deposit: function addMoney(amount) {
-//     if (amount > 0) {
-//       savingsAccount.balance += amount;
-//     }
-//   },
-//   withdraw: function removeMoney(amount) {
-//     var verifyBalance = savingsAccount.balance - amount;
-//     if (amount > 0 && verifyBalance >= 0) {
-//       savingsAccount.balance -= amount;
-//     }
-//   },
-//   // your code goes here
-//   printAccountSummary: function statement() {
-//     return (
-//       "Welcome!\nYour balance is currently $" +
-//       this.balance +
-//       " and your interest rate is " +
-//       savingsAccount.interestRatePercent +
-//       "%."
-//     );
-//   },
-// };
-
-// console.log(savingsAccount.printAccountSummary());
+console.log(canSum(7, [2, 3])) // true
+console.log(canSum(7, [5, 3, 4, 7])) // true
+console.log(canSum(7, [2, 4])) // false
+console.log(canSum(8, [2, 3, 5])) // true
