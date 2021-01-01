@@ -1,17 +1,7 @@
-function canSum(main, numbers) {
-	if (main === 0) return true
-	if (main < 0) return false
+var str = 'Give @10'
+var patt1 = /\W/g
+var patt2 = /[^a-z0-9\s]/gi
 
-	for (const num of numbers) {
-		let remainder = main - num
+let result = patt2.test(str)
 
-		if (canSum(remainder, numbers)) return true
-	}
-
-	return false
-}
-
-console.log(canSum(7, [2, 3])) // true
-console.log(canSum(7, [5, 3, 4, 7])) // true
-console.log(canSum(7, [2, 4])) // false
-console.log(canSum(8, [2, 3, 5])) // true
+console.log(result)

@@ -1,5 +1,11 @@
 {
-  "dependencies": {
-    "prompt-sync": "^4.1.5"
-  }
+	"dependencies": {
+		"prompt-sync": "^4.1.5"
+	},
+	"scripts": {
+		"start": "tsc ./dynamicKatas.ts && node ./dynamicKatas.js"
+	},
+	"devDependencies": {
+		"@tsconfig/node14": "^1.0.0"
+	}
 }
